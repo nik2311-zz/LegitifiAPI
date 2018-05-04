@@ -1,0 +1,159 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Legitify
+# during dev, should point to your local machine
+host: 52.32.165.204:10010
+# basePath prefixes all resource paths 
+basePath: /
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /user/:
+    x-swagger-router-controller: get_user
+    get:
+      summary: get user information
+      operationId: getuser
+      parameters:
+        - in: query
+          name: id
+          type: string
+          description: The id of the user you want to fetch.
+          required: true
+        - in: query
+          name: query
+          type: string
+          description: Search by Phone Number email or Name,
+          
+      responses:
+        200:
+          description: Succesfuly fetched user data.
+          schema:
+            $ref: "#/definitions/User"
+        404:
+          description: User Not Found.
+          schema:
+            $ref: "#/definitions/NotFound"
+        500:
+          description: Internal Server Error.
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /secondconnections/{id}:
+    x-swagger-router-controller: get_seconddegree_contacts
+    get:
+      summary: get users second level connections
+      operationId: getSeconddegreeConnections
+      parameters:
+        - in: path
+          name: id
+          type: string
+          description: The id of the user you want to fetch.
+          required: true
+      responses:
+        200:
+          description: Succesfuly fetched user data.
+          schema:
+            $ref: "#/definitions/secondconnections"
+        404:
+          description: User Not Found.
+          schema:
+            $ref: "#/definitions/NotFound"
+        500:
+          description: Internal Server Error.
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /login:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: LoginSignup
+    post:
+      description: Login to the service token is generated to be used in sub sequent requests
+      # movie info to be stored
+      operationId: login
+      parameters:
+        - name: Credentials
+          description: login credentials
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/LoginRequest"
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/LoginResponse"
+        404:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+
+securityDefinitions:
+  jsonApiKey:
+    type: apiKey
+    in: header
+    name: x-access-token
+
+security:
+  - jsonApiKey: []
+  
+# complex objects have schema definitions
+definitions:
+  NotFound:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  User:       # Schema name
+      type: object
+      properties:
+        appfbid:
+          type: string
+        name:
+          type: string
+      example:   # Object-level example
+        appfbid: 1
+        name: Nikhil Navin
+  secondconnections:
+      type: array
+      items:
+        $ref : "#/definitions/User"
+  LoginResponse:
+    type: object
+    properties:
+      message:
+        type: string
+        description: task object name
+      token:
+        type: string
+        description: task description
+    required:
+      - message
+      - token
+  LoginRequest:
+    type: object
+    properties:
+      username:
+        type: string
+        description: user name
+      password:
+        type: string
+        description: password
+        format: password
+    

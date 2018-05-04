@@ -1,0 +1,30 @@
+{
+    "apps": [
+      {
+        "exec_mode": "fork_mode",
+        "script": "app.js",
+        "name": "instance-0",
+        "env": {
+          "APPPORT": 4001,
+          "NEO4J_URI":"bolt://localhost:7687/db/legitify",
+          "NEO4J_USER":"neo4j",
+          "NEO4J_PASS":"dev"
+        },
+        "error_file": "/Volumes/MySpace/Legitify/LegitifiAPI/legitify/logs/proj-0.err.log",
+        "out_file": "/Volumes/MySpace/Legitify/LegitifiAPI/legitify/logs/proj-0.out.log"
+      },
+      {
+        "exec_mode": "fork_mode",
+        "script": "app.js",
+        "name": "instance-1",
+        "env": {
+          "APPPORT": 4002,
+          "NEO4J_URI":"bolt://localhost:7687/db/legitify",
+          "NEO4J_USER":"neo4j",
+          "NEO4J_PASS":"dev"
+        },
+        "error_file": "/Volumes/MySpace/Legitify/LegitifiAPI/legitify/logs/proj-1.err.log",
+        "out_file": "/Volumes/MySpace/Legitify/LegitifiAPI/legitify/logs/proj-1.out.log"
+      }
+    ]
+  }
